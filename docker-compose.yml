@@ -10,18 +10,18 @@ services:
       - ./backend:/app # Mount the backend directory for live code changes (optional, but good for development)
     restart: always
 
-  frontend:
-    # This is a placeholder for your frontend application (e.g., React/Vue)
-    # You will replace this with your actual frontend service definition later.
-    build:
-      context: ./frontend # Assuming your frontend will be in a 'frontend' directory
-      dockerfile: Dockerfile.dev # Or a specific Dockerfile for frontend development
-    container_name: summarizer_frontend
-    ports:
-      - "3000:3000" # Example: React development server often runs on port 3000
-    volumes:
-      - ./frontend:/app # Mount frontend for live code changes
-    restart: always
-    depends_on:
-      - backend # Frontend depends on backend being up
-    # command: npm start # Example command for React development server
+  # frontend:
+  #   # This is a placeholder for your frontend application (e.g., React/Vue)
+  #   # You will replace this with your actual frontend service definition later.
+  #   build:
+  #     context: ./frontend # Assuming your frontend will be in a 'frontend' directory
+  #     dockerfile: Dockerfile.dev # Or a specific Dockerfile for frontend development
+  #   container_name: summarizer_frontend
+  #   ports:
+  #     - "3000:3000" # Example: React development server often runs on port 3000
+  #   volumes:
+  #     - ./frontend:/app # Mount frontend for live code changes
+  #   restart: always
+  #   depends_on:
+  #     - backend # Frontend depends on backend being up
+  #   # command: npm start # Example command for React development server
