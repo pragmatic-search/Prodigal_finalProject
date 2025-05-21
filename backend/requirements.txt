@@ -1,3 +1,7 @@
 fastapi==0.110.0
 uvicorn==0.29.0
 pydantic==2.7.1
+transformers==4.39.3 # Or the latest stable version
+torch==2.2.2       # Required by many HuggingFace models, or tensorflow if preferred
+sentencepiece==0.2.0 # Often a dependency for HuggingFace tokenizers
+protobuf==4.25.3   # Common dependency
