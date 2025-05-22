@@ -1,7 +1,7 @@
+numpy==1.26.4
 fastapi==0.110.0
 uvicorn==0.29.0
-pydantic==2.7.1
 transformers==4.39.3
-torch==2.2.2
+torch==2.2.2  # Already installed above (CPU-only)
 sentencepiece==0.2.0
 protobuf==4.25.3

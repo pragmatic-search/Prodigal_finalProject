@@ -1,7 +1,10 @@
-FROM python:3.9-slim
+FROM python:3.9-slim  # ← Use slim image
 
 WORKDIR /app
 
+RUN pip install --no-cache-dir torch==2.2.2 --index-url https://download.pytorch.org/whl/cpu
+
+# Then install other requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
