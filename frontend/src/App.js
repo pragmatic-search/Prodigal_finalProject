@@ -10,6 +10,10 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (text.length < 100 || text.length > 5000) {
+      setError('Text must be between 100-5000 characters');
+        return;
+      }
     if (!text.trim()) {
       setError('Please enter some text to summarize');
       return;
@@ -19,16 +23,33 @@ function App() {
     setError('');
     
     try {
-      const response = await axios.post('http://backend:8000/summarize', {
-        text: text
-      });
-      setSummary(response.data.summary);
+      const response = await axios.post(
+        'http://localhost:8000/summarize',
+        { text: text },
+        { 
+          timeout: 30000,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      if (response.data && response.data.summary) {
+        setSummary(response.data.summary);
+      } else {
+        throw new Error('Invalid response format');
+      }
+      
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to generate summary');
+      setError(
+        err.response?.data?.detail || 
+        err.message || 
+        'Failed to generate summary. Try a shorter text.'
+      );
     } finally {
       setIsLoading(false);
     }
-  };
+  };  // <-- This closing brace was missing
 
   return (
     <div className="app">

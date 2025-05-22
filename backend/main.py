@@ -4,6 +4,23 @@ from transformers import pipeline
 import uvicorn
 import logging
 
+@app.post("/summarize")
+async def summarize_text(request: SummarizeRequest):
+    try:
+        # Add timeout wrapper
+        summary_results = await asyncio.wait_for(
+            asyncio.to_thread(
+                lambda: summarizer_pipeline(
+                    request.text,
+                    max_length=150,
+                    min_length=30,
+                    do_sample=False
+                )
+            ),
+            timeout=30.0  # 30-second timeout
+        )
+        
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
