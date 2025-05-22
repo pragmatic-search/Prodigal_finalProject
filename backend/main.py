@@ -4,6 +4,7 @@ from transformers import pipeline
 import uvicorn
 import logging
 import asyncio
+from fastapi.middleware.cors import CORSMiddleware
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -16,12 +17,20 @@ app = FastAPI(
     version="1.0.0",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Replace "*" with your frontend origin in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Global variable for the model
 summarizer_pipeline = None
 
 def load_ai_model():
     global summarizer_pipeline
-    model_name = "philschmid/tiny-distilbart-cnn"
+    model_name = "sshleifer/distilbart-cnn-6-6"
     
     try:
         logger.info(f"Loading summarization model: {model_name}...")

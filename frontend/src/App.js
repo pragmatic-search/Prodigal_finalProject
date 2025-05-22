@@ -28,7 +28,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        'https://summarizer-backend.onrender.com/summarize',
+        'http://localhost:8000/summarize',
         { text: trimmedText },
         {
           timeout: 30000,
