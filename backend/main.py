@@ -3,23 +3,7 @@ from pydantic import BaseModel, Field
 from transformers import pipeline
 import uvicorn
 import logging
-
-@app.post("/summarize")
-async def summarize_text(request: SummarizeRequest):
-    try:
-        # Add timeout wrapper
-        summary_results = await asyncio.wait_for(
-            asyncio.to_thread(
-                lambda: summarizer_pipeline(
-                    request.text,
-                    max_length=150,
-                    min_length=30,
-                    do_sample=False
-                )
-            ),
-            timeout=30.0  # 30-second timeout
-        )
-        
+import asyncio
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -68,21 +52,35 @@ async def summarize_text(request: SummarizeRequest):
         )
 
     try:
-        summary_results = summarizer_pipeline(
-            request.text,
-            max_length=150,
-            min_length=30,
-            do_sample=False
+        summary_results = await asyncio.wait_for(
+            asyncio.to_thread(
+                lambda: summarizer_pipeline(
+                    request.text,
+                    max_length=150,
+                    min_length=30,
+                    do_sample=False
+                )
+            ),
+            timeout=30.0  # Timeout in seconds
         )
-        
+
         summary = summary_results[0]['summary_text'] if summary_results else "No summary could be generated."
-        return {"original_text_length": len(request.text), "summary": summary}
-    
+        return {
+            "original_text_length": len(request.text),
+            "summary": summary
+        }
+
+    except asyncio.TimeoutError:
+        logger.warning("Summarization timed out.")
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail="The summarization request timed out. Try again with shorter input."
+        )
     except Exception as e:
-        logger.error(f"An error occurred during summarization: {e}", exc_info=True)
+        logger.error(f"Error during summarization: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An error occurred while generating the summary. Please check the input text."
+            detail="An error occurred while generating the summary."
         )
 
 @app.get("/")
