@@ -10,46 +10,49 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (text.length < 100 || text.length > 5000) {
-      setError('Text must be between 100-5000 characters');
-        return;
-      }
-    if (!text.trim()) {
+    const trimmedText = text.trim();
+
+    if (!trimmedText) {
       setError('Please enter some text to summarize');
+      return;
+    }
+
+    if (trimmedText.length < 100 || trimmedText.length > 5000) {
+      setError('Text must be between 100-5000 characters');
       return;
     }
 
     setIsLoading(true);
     setError('');
-    
+    setSummary('');
+
     try {
       const response = await axios.post(
-        'http://localhost:8000/summarize',
-        { text: text },
-        { 
+        'https://summarizer-backend.onrender.com/summarize',
+        { text: trimmedText },
+        {
           timeout: 30000,
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         }
       );
-      
+
       if (response.data && response.data.summary) {
         setSummary(response.data.summary);
       } else {
         throw new Error('Invalid response format');
       }
-      
     } catch (err) {
       setError(
-        err.response?.data?.detail || 
-        err.message || 
+        err.response?.data?.detail ||
+        err.message ||
         'Failed to generate summary. Try a shorter text.'
       );
     } finally {
       setIsLoading(false);
     }
-  };  // <-- This closing brace was missing
+  };
 
   return (
     <div className="app">
@@ -64,11 +67,10 @@ function App() {
           {isLoading ? 'Summarizing...' : 'Summarize'}
         </button>
       </form>
-      
+
       {error && <div className="error">{error}</div>}
-      
       {isLoading && <div className="loading">Processing your text...</div>}
-      
+
       {summary && (
         <div className="summary">
           <h2>Summary</h2>
