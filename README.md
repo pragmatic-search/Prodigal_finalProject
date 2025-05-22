@@ -4,8 +4,10 @@ COMPLETED THE PROJECT
 
 sample examples
 
-![alt text](image.png)
+![sample image](Demo_images/image.png)
 
-![alt text](image-1.png)
 
-![alt text](image-2.png)
+![sample image](Demo_images/image-1.png)
+
+
+![sample image](Demo_images/image-2.png)
