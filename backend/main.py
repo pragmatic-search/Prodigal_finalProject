@@ -20,7 +20,7 @@ summarizer_pipeline = None
 
 def load_ai_model():
     global summarizer_pipeline
-    model_name = "sshleifer/distilbart-cnn-12-6"
+    model_name = "sshleifer/distilbart-cnn-6-6"
     
     try:
         logger.info(f"Loading summarization model: {model_name}...")
